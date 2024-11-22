@@ -38,7 +38,7 @@ int main() {
         printf("2. Mostrar productos\n");
         printf("3. Eliminar producto\n");
         printf("4. Editar producto\n");
-        printf("5. Verificar factibilidad de produccion\n");
+        printf("5. Verificar factibilidad de produccion por producto\n");
         printf("6. Salir\n");
         printf("Seleccione una opcion: ");
         scanf("%d", &opcion);
@@ -61,13 +61,15 @@ int main() {
                 editarProducto(nombres, tiempos_fabricacion, cantidades, cantidad_productos);
                 break;
             case 5:
-                verificarFactibilidad(nombres, tiempos_fabricacion, nombres_recursos, cantidades_recursos, cantidades, cuentas_recursos, cantidad_productos, nombres_recursos_disponibles, cantidades_recursos_disponibles, cantidad_recursos);
+                verificarFactibilidadPorProducto(nombres, tiempos_fabricacion, nombres_recursos, cantidades_recursos, 
+                                                 cantidades, cuentas_recursos, cantidad_productos, nombres_recursos_disponibles, 
+                                                 cantidades_recursos_disponibles, cantidad_recursos);
                 break;
             case 6:
                 printf("\nSaliendo del programa. ¡Hasta luego!\n");
                 break;
             default:
-                printf("\nOpcion no valida. Intentelo de nuevo.\n");
+                printf("\nOpcion no valida. Inténtelo de nuevo.\n");
         }
     } while (opcion != 6);
 
