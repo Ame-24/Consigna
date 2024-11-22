@@ -5,11 +5,6 @@
 // Agregar un producto
 void agregarProducto(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[], char nombres_recursos[][MAX_RECURSOS][LONGITUD_NOMBRE], 
                      int cantidades_recursos[][MAX_RECURSOS], int cantidades[], int cuentas_recursos[], int *cantidad_productos) {
-    if (*cantidad_productos >= MAX_PRODUCTOS) {
-        printf("\nNo se pueden agregar mas productos. Limite alcanzado.\n");
-        return;
-    }
-
     printf("\nIngrese los datos del producto:\n");
     printf("Nombre del producto: ");
     scanf(" %[^\n]", nombres[*cantidad_productos]);
@@ -54,11 +49,6 @@ void mostrarProductos(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[]
 // Eliminar un producto
 void eliminarProducto(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[], char nombres_recursos[][MAX_RECURSOS][LONGITUD_NOMBRE], 
                       int cantidades_recursos[][MAX_RECURSOS], int cantidades[], int cuentas_recursos[], int *cantidad_productos) {
-    if (*cantidad_productos == 0) {
-        printf("\nNo hay productos para eliminar.\n");
-        return;
-    }
-
     char nombre[LONGITUD_NOMBRE];
     printf("\nIngrese el nombre del producto a eliminar: ");
     scanf(" %[^\n]", nombre);
@@ -85,11 +75,6 @@ void eliminarProducto(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[]
 
 // Editar un producto
 void editarProducto(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[], int cantidades[], int cantidad_productos) {
-    if (cantidad_productos == 0) {
-        printf("\nNo hay productos para editar.\n");
-        return;
-    }
-
     char nombre[LONGITUD_NOMBRE];
     printf("\nIngrese el nombre del producto a editar: ");
     scanf(" %[^\n]", nombre);
@@ -130,26 +115,21 @@ void editarProducto(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[], 
     printf("\nProducto no encontrado.\n");
 }
 
-// Calcular tiempo total
-int calcularTiempoTotal(int tiempos_fabricacion[], int cantidades[], int cantidad_productos) {
-    int tiempo_total = 0;
-    for (int i = 0; i < cantidad_productos; i++) {
-        tiempo_total += tiempos_fabricacion[i] * cantidades[i];
+// Verificar factibilidad por producto
+void verificarFactibilidadPorProducto(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[], char nombres_recursos[][MAX_RECURSOS][LONGITUD_NOMBRE], 
+                                      int cantidades_recursos[][MAX_RECURSOS], int cantidades[], int cuentas_recursos[], int cantidad_productos, 
+                                      char nombres_recursos_disponibles[][LONGITUD_NOMBRE], int cantidades_recursos_disponibles[], int cantidad_recursos) {
+    if (cantidad_productos == 0) {
+        printf("\nNo hay productos registrados para verificar.\n");
+        return;
     }
-    return tiempo_total;
-}
 
-// Verificar factibilidad
-void verificarFactibilidad(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[], char nombres_recursos[][MAX_RECURSOS][LONGITUD_NOMBRE], 
-                           int cantidades_recursos[][MAX_RECURSOS], int cantidades[], int cuentas_recursos[], int cantidad_productos, 
-                           char nombres_recursos_disponibles[][LONGITUD_NOMBRE], int cantidades_recursos_disponibles[], int cantidad_recursos) {
-    int tiempo_total = calcularTiempoTotal(tiempos_fabricacion, cantidades, cantidad_productos);
-    int excedido = 0;
+    printf("\n==== Verificacion de Factibilidad por Producto ====\n");
 
-    printf("\nTiempo total requerido: %d horas\n", tiempo_total);
-
-    printf("Recursos requeridos:\n");
     for (int i = 0; i < cantidad_productos; i++) {
+        printf("\nProducto: %s\n", nombres[i]);
+        int factible = 1;  // Asumimos que el producto es factible inicialmente.
+
         for (int j = 0; j < cuentas_recursos[i]; j++) {
             int total_requerido = cantidades_recursos[i][j] * cantidades[i];
 
@@ -162,21 +142,22 @@ void verificarFactibilidad(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricac
             }
 
             if (indice_disponible != -1) {
-                printf("   %s: %d requeridos, %d disponibles\n", nombres_recursos[i][j], total_requerido, 
+                printf("   - Recurso: %s | Requerido: %d | Disponible: %d\n", nombres_recursos[i][j], total_requerido, 
                        cantidades_recursos_disponibles[indice_disponible]);
                 if (total_requerido > cantidades_recursos_disponibles[indice_disponible]) {
-                    excedido = 1;
+                    printf("     ¡No hay suficientes recursos disponibles!\n");
+                    factible = 0;  // El producto no es factible si falta un recurso.
                 }
             } else {
-                printf("   %s: %d requeridos, recurso no disponible\n", nombres_recursos[i][j], total_requerido);
-                excedido = 1;
+                printf("   - Recurso: %s | Requerido: %d | No disponible\n", nombres_recursos[i][j], total_requerido);
+                factible = 0;  // El producto no es factible si el recurso no está disponible.
             }
         }
-    }
 
-    if (excedido) {
-        printf("\nNo es posible fabricar los productos debido a la falta de recursos.\n");
-    } else {
-        printf("\nEs posible fabricar los productos con los recursos disponibles.\n");
+        if (factible) {
+            printf("   => Este producto **se puede fabricar** con los recursos disponibles.\n");
+        } else {
+            printf("   => Este producto **no se puede fabricar** debido a la falta de recursos.\n");
+        }
     }
 }
