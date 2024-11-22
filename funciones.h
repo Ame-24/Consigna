@@ -16,10 +16,8 @@ void eliminarProducto(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[]
 
 void editarProducto(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[], int cantidades[], int cantidad_productos);
 
-int calcularTiempoTotal(int tiempos_fabricacion[], int cantidades[], int cantidad_productos);
-
-void verificarFactibilidad(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[], char nombres_recursos[][MAX_RECURSOS][LONGITUD_NOMBRE], 
-                           int cantidades_recursos[][MAX_RECURSOS], int cantidades[], int cuentas_recursos[], int cantidad_productos, 
-                           char nombres_recursos_disponibles[][LONGITUD_NOMBRE], int cantidades_recursos_disponibles[], int cantidad_recursos);
+void verificarFactibilidadPorProducto(char nombres[][LONGITUD_NOMBRE], int tiempos_fabricacion[], char nombres_recursos[][MAX_RECURSOS][LONGITUD_NOMBRE], 
+                                      int cantidades_recursos[][MAX_RECURSOS], int cantidades[], int cuentas_recursos[], int cantidad_productos, 
+                                      char nombres_recursos_disponibles[][LONGITUD_NOMBRE], int cantidades_recursos_disponibles[], int cantidad_recursos);
 
 #endif
